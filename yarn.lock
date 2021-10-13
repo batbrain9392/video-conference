@@ -2049,6 +2049,21 @@
     merge-source-map "^1.1.0"
     schema-utils "^2.7.0"
 
+"@ng-web-apis/common@^1.12.0":
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/@ng-web-apis/common/-/common-1.12.0.tgz#13b61d4192566c2e386b0b6aa31dd44321dcd01b"
+  integrity sha512-DqfoZYclkKXZh/vv8WzUHJJ8ZBnBIJP8ky2NlF2aJdQxMWdZD3lXxrXsbYetv4HVhamyeTNU7bIFMZgVSG34mQ==
+  dependencies:
+    network-information-types "^0.1.0"
+    tslib "^1.9.0"
+
+"@ng-web-apis/permissions@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@ng-web-apis/permissions/-/permissions-1.0.0.tgz#6059d5abaab4ed4a243bd083a12f0b87fe6925cf"
+  integrity sha512-65HwWj+wjZcZ7HcFYJgNA9Sp550GQQdrz1EWXDoN86lp6xEYJ7uNSaVcUxn3AROTTz2J+K4bHTktcZ+xSnzCgA==
+  dependencies:
+    tslib "^1.10.0"
+
 "@ngtools/webpack@12.2.9":
   version "12.2.9"
   resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-12.2.9.tgz#e13d815d35e155bea6e2b13f6f54bc3275ed0670"
@@ -8123,6 +8138,11 @@ neo-async@^2.6.2:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
+
+network-information-types@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/network-information-types/-/network-information-types-0.1.0.tgz#5c880bebc2a9e6b25eb00ed23854d13ff3a7fe3a"
+  integrity sha512-cRUCYZoRHTMjYcgk5MbwqM0h0Za34panRxAJKY8n+mQ+NLMuRIw7aKzmaZqkC/cte7bnRcdfTwFA27GgN62EtQ==
 
 nice-napi@^1.0.2:
   version "1.0.2"

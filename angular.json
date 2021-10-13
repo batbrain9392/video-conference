@@ -156,7 +156,8 @@
       "unitTestRunner": "jest"
     },
     "@nrwl/angular:component": {
-      "style": "css"
+      "style": "css",
+      "changeDetection": "OnPush"
     }
   },
   "defaultProject": "client"
