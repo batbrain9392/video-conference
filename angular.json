@@ -71,6 +71,16 @@
             "browserTarget": "client:build"
           }
         },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "client:build:production",
+            "firebaseProject": "vc-batbrain9392",
+            "firebaseHostingSite": "vc-batbrain9392"
+          }
+        },
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {

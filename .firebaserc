@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "vc-batbrain9392": {
+      "hosting": {
+        "dummy": [
+          "vc-batbrain9392"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "vc-batbrain9392"
+  }
+}
