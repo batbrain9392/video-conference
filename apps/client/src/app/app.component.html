@@ -1,10 +1,12 @@
 <main>
-  <!-- me -->
-  <section>
-    <video #me [muted]="true"></video>
-  </section>
-  <!-- other -->
-  <section>
-    <video #other [muted]="true"></video>
-  </section>
+  <ng-container *ngIf="isMediaNotDenied$ | async">
+    <!-- me -->
+    <section *ngIf="myStream$ | async as stream">
+      <video #me autoplay [muted]="true" [srcObject]="stream"></video>
+    </section>
+    <!-- other -->
+    <section>
+      <video #other autoplay [muted]="true"></video>
+    </section>
+  </ng-container>
 </main>

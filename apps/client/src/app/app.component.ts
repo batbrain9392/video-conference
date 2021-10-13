@@ -1,13 +1,5 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  Inject,
-  ViewChild,
-} from '@angular/core';
-import { PermissionsService } from '@ng-web-apis/permissions';
-import { MEDIA_DEVICES } from '@ng-web-apis-extended';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MediaService } from './lib/media/media.service';
 
 @Component({
   selector: 'video-conference-root',
@@ -15,21 +7,13 @@ import { MEDIA_DEVICES } from '@ng-web-apis-extended';
   styleUrls: ['./app.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements AfterViewInit {
-  @ViewChild('me') videoMeRef?: ElementRef<HTMLVideoElement>;
-  @ViewChild('other') videoOtherRef?: ElementRef<HTMLVideoElement>;
+export class AppComponent {
+  readonly isMediaNotDenied$ = this.media.isMediaNotDenied$;
+  readonly myStream$ = this.media.myStream$;
 
-  constructor(
-    private readonly permissions: PermissionsService,
-    @Inject(MEDIA_DEVICES) private readonly mediaDevices: MediaDevices
-  ) // private readonly elementRef: ElementRef<HTMLElement>,
-  {}
+  constructor(private readonly media: MediaService) {}
 
-  ngAfterViewInit(): void {
-    this.permissions.state('camera').subscribe(console.log);
-    this.mediaDevices
-      .getUserMedia({ video: true, audio: true })
-      .then(console.log);
-    console.log(this.videoMeRef?.nativeElement);
+  log(...args: unknown[]): void {
+    console.log(...args);
   }
 }
