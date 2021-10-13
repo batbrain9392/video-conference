@@ -27,16 +27,5 @@
       }
     ]
   },
-  "projects": {
-    "client": {
-      "tags": []
-    },
-    "client-e2e": {
-      "tags": [],
-      "implicitDependencies": ["client"]
-    },
-    "ng-web-apis-extended": {
-      "tags": []
-    }
-  }
+  "projects": {}
 }

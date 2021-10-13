@@ -1,0 +1,23 @@
+{
+  "root": "libs/ng-web-apis-extended",
+  "sourceRoot": "libs/ng-web-apis-extended/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/ng-web-apis-extended/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/ng-web-apis-extended"],
+      "options": {
+        "jestConfig": "libs/ng-web-apis-extended/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}
