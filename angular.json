@@ -151,8 +151,7 @@
     }
   },
   "cli": {
-    "defaultCollection": "@nrwl/angular",
-    "packageManager": "yarn"
+    "defaultCollection": "@nrwl/angular"
   },
   "schematics": {
     "@nrwl/angular": {
