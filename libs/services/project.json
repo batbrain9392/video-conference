@@ -1,14 +1,14 @@
 {
   "projectType": "library",
-  "root": "libs/ng-web-apis-extended",
-  "sourceRoot": "libs/ng-web-apis-extended/src",
+  "root": "libs/services",
+  "sourceRoot": "libs/services/src",
   "prefix": "video-conference",
   "targets": {
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/ng-web-apis-extended"],
+      "outputs": ["coverage/libs/services"],
       "options": {
-        "jestConfig": "libs/ng-web-apis-extended/jest.config.js",
+        "jestConfig": "libs/services/jest.config.js",
         "passWithNoTests": true
       }
     },
@@ -16,8 +16,8 @@
       "executor": "@nrwl/linter:eslint",
       "options": {
         "lintFilePatterns": [
-          "libs/ng-web-apis-extended/src/**/*.ts",
-          "libs/ng-web-apis-extended/src/**/*.html"
+          "libs/services/src/**/*.ts",
+          "libs/services/src/**/*.html"
         ]
       }
     }

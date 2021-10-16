@@ -1,5 +1,5 @@
 {
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "cSpell.words": ["Firestore", "nrwl", "precommit", "rxfire"]
+  "cSpell.words": ["Firestore", "nrwl", "playsinline", "precommit", "rxfire"]
 }

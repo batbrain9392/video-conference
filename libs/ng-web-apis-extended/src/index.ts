@@ -1,1 +1,1 @@
-export * from './lib/media-devices';
+export * from './lib/tokens/media-devices';

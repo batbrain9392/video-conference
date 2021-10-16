@@ -3,7 +3,8 @@
   "projects": {
     "client": "apps/client",
     "client-e2e": "apps/client-e2e",
-    "ng-web-apis-extended": "libs/ng-web-apis-extended"
+    "ng-web-apis-extended": "libs/ng-web-apis-extended",
+    "services": "libs/services"
   },
   "cli": {
     "defaultCollection": "@nrwl/angular"

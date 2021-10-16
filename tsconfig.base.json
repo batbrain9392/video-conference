@@ -15,7 +15,10 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@ng-web-apis-extended": ["libs/ng-web-apis-extended/src/index.ts"]
+      "@video-conference/ng-web-apis-extended": [
+        "libs/ng-web-apis-extended/src/index.ts"
+      ],
+      "@video-conference/services": ["libs/services/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

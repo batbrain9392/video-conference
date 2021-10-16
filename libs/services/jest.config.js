@@ -1,5 +1,5 @@
 module.exports = {
-  displayName: 'ng-web-apis-extended',
+  displayName: 'services',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {
@@ -8,7 +8,7 @@ module.exports = {
       stringifyContentPathRegex: '\\.(html|svg)$',
     },
   },
-  coverageDirectory: '../../coverage/libs/ng-web-apis-extended',
+  coverageDirectory: '../../coverage/libs/services',
   transform: {
     '^.+\\.(ts|js|html)$': 'jest-preset-angular',
   },
