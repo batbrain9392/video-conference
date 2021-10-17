@@ -1,6 +1,7 @@
 video {
-  width: 40vw;
-  height: 30vw;
+  --width: 40vw;
+  width: var(--width);
+  height: calc(var(--width) * 9 / 16);
   margin: 2rem;
   background: #2c3e50;
   transform: rotateY(180deg);

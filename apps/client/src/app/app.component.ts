@@ -51,7 +51,14 @@ export class AppComponent {
 
   async setupMediaSources() {
     const localStream = await this.mediaDevices.getUserMedia({
-      video: true,
+      video: {
+        aspectRatio: {
+          ideal: 16 / 9,
+        },
+        height: {
+          ideal: 720,
+        },
+      },
       audio: true,
     });
     this.localStream = localStream;
