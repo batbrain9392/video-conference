@@ -10,12 +10,7 @@
   </div>
   <div>
     <h3>Remote Stream</h3>
-    <video
-      [muted]="true"
-      autoplay
-      playsinline
-      [srcObject]="remoteStream$ | async"
-    ></video>
+    <video autoplay playsinline [srcObject]="remoteStream$ | async"></video>
   </div>
 </section>
 
