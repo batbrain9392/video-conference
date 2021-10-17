@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { fromEvent, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { Firestore } from '@angular/fire/firestore';
 import { addDoc, collection, onSnapshot } from '@firebase/firestore';
 // import { FirestoreService } from '../firestore/firestore.service';
@@ -25,7 +25,8 @@ export class WebRTCService {
 
   private getRemoteStream(): Observable<MediaStream> {
     return fromEvent<RTCTrackEvent>(this.rtcPeerConnection, 'track').pipe(
-      map(({ streams: [stream] }) => stream)
+      map(({ streams: [stream] }) => stream),
+      take(1)
     );
   }
 
