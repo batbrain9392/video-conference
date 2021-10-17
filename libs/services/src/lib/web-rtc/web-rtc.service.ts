@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
-import { fromEvent, Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
-import { Firestore } from '@angular/fire/firestore';
+import { from, fromEvent, Observable } from 'rxjs';
+import { map, switchMap, take } from 'rxjs/operators';
+import {
+  collectionChanges,
+  docSnapshots,
+  Firestore,
+} from '@angular/fire/firestore';
 import {
   addDoc,
   collection,
   doc,
   getDoc,
-  onSnapshot,
   updateDoc,
 } from '@firebase/firestore';
 // import { FirestoreService } from '../firestore/firestore.service';
@@ -66,28 +69,58 @@ export class WebRTCService {
     };
 
     // Listen for remote answer
-    onSnapshot(callDoc, (snapshot) => {
-      const data = snapshot.data();
-      if (!this.rtcPeerConnection.currentRemoteDescription && data?.answer) {
-        const answerDescription = new RTCSessionDescription(data.answer);
-        this.rtcPeerConnection.setRemoteDescription(answerDescription);
-      }
-    });
+    docSnapshots(callDoc)
+      .pipe(
+        map((snapshot) => {
+          const data = snapshot.data();
+          if (
+            !this.rtcPeerConnection.currentRemoteDescription &&
+            data?.answer
+          ) {
+            const answerDescription = new RTCSessionDescription(data.answer);
+            this.rtcPeerConnection.setRemoteDescription(answerDescription);
+          }
+        })
+      )
+      .subscribe();
 
     // When answered, add candidate to peer connection
-    onSnapshot(answerCandidates, (snapshot) =>
-      snapshot.docChanges().forEach((change) => {
-        if (change.type === 'added') {
-          const candidate = new RTCIceCandidate(change.doc.data());
-          this.rtcPeerConnection.addIceCandidate(candidate);
-        }
-      })
-    );
+    collectionChanges(answerCandidates)
+      .pipe(
+        map((changes) =>
+          changes.forEach((change) => {
+            if (change.type === 'added') {
+              const candidate = new RTCIceCandidate(change.doc.data());
+              this.rtcPeerConnection.addIceCandidate(candidate);
+            }
+          })
+        )
+      )
+      .subscribe();
 
     return callDoc.id;
   }
 
-  async joinCall(callId: string): Promise<void> {
+  joinCall(callId: string): Observable<void> {
+    return from(this.x(callId)).pipe(
+      switchMap((offerCandidates) =>
+        collectionChanges(offerCandidates).pipe(
+          map((changes) =>
+            changes.forEach(({ type, doc }) => {
+              if (type === 'added') {
+                const data = doc.data();
+                this.rtcPeerConnection.addIceCandidate(
+                  new RTCIceCandidate(data)
+                );
+              }
+            })
+          )
+        )
+      )
+    );
+  }
+
+  private async x(callId: string): Promise<ReturnType<typeof collection>> {
     const callDoc = doc(collection(this.firestore, 'calls'), callId);
     const answerCandidates = collection(callDoc, 'answerCandidates');
     const offerCandidates = collection(callDoc, 'offerCandidates');
@@ -111,14 +144,6 @@ export class WebRTCService {
 
     await updateDoc(callDoc, { answer });
 
-    onSnapshot(offerCandidates, (snapshot) =>
-      snapshot.docChanges().forEach((change) => {
-        console.log(change);
-        if (change.type === 'added') {
-          const data = change.doc.data();
-          this.rtcPeerConnection.addIceCandidate(new RTCIceCandidate(data));
-        }
-      })
-    );
+    return offerCandidates;
   }
 }

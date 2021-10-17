@@ -21,7 +21,7 @@ export class AppComponent {
     this.callId = await this.webRTC.createOffer();
   }
 
-  joinCall(): Promise<void> {
-    return this.webRTC.joinCall(this.callId);
+  joinCall(): void {
+    this.webRTC.joinCall(this.callId).subscribe();
   }
 }
