@@ -19,13 +19,13 @@
   </div>
 </section>
 
-<h2>1. Create a meeting</h2>
-<button (click)="createMeeting()">Create meeting</button>
+<h2>1. Create a call</h2>
+<button (click)="createCall()">Create call</button>
 
 <h2>2. Join a meeting</h2>
 <p>Answer the call from a different browser window or device</p>
-<input [(ngModel)]="meetingId" />
-<button (click)="joinMeeting(meetingId)">Answer</button>
+<input [(ngModel)]="callId" />
+<button (click)="joinCall()">Answer</button>
 
 <!-- <h2>3. Hangup</h2>
 <button>Hangup</button> -->

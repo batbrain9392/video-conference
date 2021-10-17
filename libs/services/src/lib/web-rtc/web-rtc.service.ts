@@ -2,9 +2,17 @@ import { Injectable } from '@angular/core';
 import { fromEvent, Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { Firestore } from '@angular/fire/firestore';
-import { addDoc, collection, onSnapshot } from '@firebase/firestore';
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  updateDoc,
+} from '@firebase/firestore';
 // import { FirestoreService } from '../firestore/firestore.service';
 
+type SessionDescription = Pick<RTCSessionDescriptionInit, 'sdp' | 'type'>;
 const rtcConfiguration: RTCConfiguration = {
   iceServers: [
     {
@@ -41,7 +49,7 @@ export class WebRTCService {
     const offerDescription = await this.rtcPeerConnection.createOffer();
     await this.rtcPeerConnection.setLocalDescription(offerDescription);
 
-    const offer = {
+    const offer: SessionDescription = {
       sdp: offerDescription.sdp,
       type: offerDescription.type,
     };
@@ -67,15 +75,50 @@ export class WebRTCService {
     });
 
     // When answered, add candidate to peer connection
-    onSnapshot(answerCandidates, (snapshot) => {
+    onSnapshot(answerCandidates, (snapshot) =>
       snapshot.docChanges().forEach((change) => {
         if (change.type === 'added') {
           const candidate = new RTCIceCandidate(change.doc.data());
           this.rtcPeerConnection.addIceCandidate(candidate);
         }
-      });
-    });
+      })
+    );
 
     return callDoc.id;
+  }
+
+  async joinCall(callId: string): Promise<void> {
+    const callDoc = doc(collection(this.firestore, 'calls'), callId);
+    const answerCandidates = collection(callDoc, 'answerCandidates');
+    const offerCandidates = collection(callDoc, 'offerCandidates');
+
+    this.rtcPeerConnection.onicecandidate = (event) => {
+      event.candidate && addDoc(answerCandidates, event.candidate.toJSON());
+    };
+
+    const offer: SessionDescription = (await getDoc(callDoc)).data()?.offer;
+    await this.rtcPeerConnection.setRemoteDescription(
+      new RTCSessionDescription(offer)
+    );
+
+    const answerDescription = await this.rtcPeerConnection.createAnswer();
+    await this.rtcPeerConnection.setLocalDescription(answerDescription);
+
+    const answer: SessionDescription = {
+      type: answerDescription.type,
+      sdp: answerDescription.sdp,
+    };
+
+    await updateDoc(callDoc, { answer });
+
+    onSnapshot(offerCandidates, (snapshot) =>
+      snapshot.docChanges().forEach((change) => {
+        console.log(change);
+        if (change.type === 'added') {
+          const data = change.doc.data();
+          this.rtcPeerConnection.addIceCandidate(new RTCIceCandidate(data));
+        }
+      })
+    );
   }
 }
