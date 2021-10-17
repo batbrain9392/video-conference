@@ -1,7 +1,7 @@
 {
   "hosting": {
-    "target": "dummy",
-    "public": "dist/dummy",
+    "target": "client",
+    "public": "dist/apps/client",
     "ignore": ["**/.*"],
     "headers": [
       {
