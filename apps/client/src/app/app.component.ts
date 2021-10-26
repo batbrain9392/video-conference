@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MediaService, WebRTCService } from '@video-conference/services';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'video-conference-root',
@@ -18,7 +19,10 @@ export class AppComponent {
   ) {}
 
   async createCall(): Promise<void> {
-    this.callId = await this.webRTC.createOffer();
+    this.webRTC
+      .createCall()
+      .pipe(tap((callId) => (this.callId = callId)))
+      .subscribe();
   }
 
   joinCall(): void {
