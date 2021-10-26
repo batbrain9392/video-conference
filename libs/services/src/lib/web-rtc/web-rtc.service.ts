@@ -8,24 +8,11 @@ import {
   take,
 } from 'rxjs/operators';
 import {
-  collectionChanges,
-  docSnapshots,
-  Firestore,
-} from '@angular/fire/firestore';
-import {
-  addDoc,
-  collection,
-  doc,
-  DocumentData,
-  DocumentReference,
-  getDoc,
-  setDoc,
-  updateDoc,
-} from '@firebase/firestore';
-// import { FirestoreService } from '../firestore/firestore.service';
+  DatabaseService,
+  SessionDescription,
+  SubCollection,
+} from '../database/database.service';
 
-type SessionDescription = Pick<RTCSessionDescriptionInit, 'sdp' | 'type'>;
-type SubCollection = `${'answer' | 'offer'}Candidates`;
 const rtcConfiguration: RTCConfiguration = {
   iceServers: [
     {
@@ -42,7 +29,7 @@ export class WebRTCService {
   readonly rtcPeerConnection = new RTCPeerConnection(rtcConfiguration);
   readonly remoteStream$ = this.getRemoteStream();
 
-  constructor(private readonly firestore: Firestore) {}
+  constructor(private readonly database: DatabaseService) {}
 
   private getRemoteStream(): Observable<MediaStream> {
     return fromEvent<RTCTrackEvent>(this.rtcPeerConnection, 'track').pipe(
@@ -58,76 +45,68 @@ export class WebRTCService {
   }
 
   createCall(): Observable<string> {
-    const callDoc = doc(collection(this.firestore, 'calls'));
+    const callId = this.database.createCall();
     return merge(
-      this.getCandidatesAndSaveToDb('offerCandidates', callDoc),
-      from(this.createOffer(callDoc)).pipe(
+      this.getCandidatesAndSaveToDb('offerCandidates', callId),
+      from(this.createOffer(callId)).pipe(
         switchMap(() =>
           merge(
-            this.listenForRemoteAnswer(callDoc),
+            this.listenForRemoteAnswer(callId),
             this.addCandidateToPeerConnectionWhenAnswered(
               'answerCandidates',
-              callDoc
+              callId
             )
           )
         )
       )
     ).pipe(
-      map(() => callDoc.id),
-      startWith(callDoc.id),
+      map(() => callId),
+      startWith(callId),
       distinctUntilChanged()
     );
   }
 
-  private async createOffer(
-    callDoc: DocumentReference<DocumentData>
-  ): Promise<void> {
+  private async createOffer(callId: string): Promise<void> {
     const offerDescription = await this.rtcPeerConnection.createOffer();
     await this.rtcPeerConnection.setLocalDescription(offerDescription);
     const offer = this.getSessionDescription(offerDescription);
-    return setDoc(callDoc, { offer });
+    return this.database.setCallWithOffer(callId, offer);
   }
 
-  private listenForRemoteAnswer(
-    callDoc: DocumentReference<DocumentData>
-  ): Observable<void> {
-    return docSnapshots(callDoc).pipe(
-      map((snapshot) => {
-        const data = snapshot.data();
-        if (!this.rtcPeerConnection.currentRemoteDescription && data?.answer) {
-          const answerDescription = new RTCSessionDescription(data.answer);
+  private listenForRemoteAnswer(callId: string): Observable<void> {
+    return this.database.listenForRemoteAnswer(callId)(
+      (answer: SessionDescription) => {
+        if (!this.rtcPeerConnection.currentRemoteDescription && answer) {
+          const answerDescription = new RTCSessionDescription(answer);
           this.rtcPeerConnection.setRemoteDescription(answerDescription);
         }
-      })
+      }
     );
   }
 
   joinCall(callId: string): Observable<void> {
-    const callDoc = doc(collection(this.firestore, 'calls'), callId);
     return merge(
-      this.getCandidatesAndSaveToDb('answerCandidates', callDoc),
-      from(this.createAnswer(callDoc)).pipe(
+      this.getCandidatesAndSaveToDb('answerCandidates', callId),
+      from(this.createAnswer(callId)).pipe(
         switchMap(() =>
           this.addCandidateToPeerConnectionWhenAnswered(
             'offerCandidates',
-            callDoc
+            callId
           )
         )
       )
     );
   }
 
-  private async createAnswer(
-    callDoc: DocumentReference<DocumentData>
-  ): Promise<void> {
-    const offer: SessionDescription = (await getDoc(callDoc)).data()?.offer;
+  private async createAnswer(callId: string): Promise<void> {
+    const offer = await this.database.getCallOffer(callId);
     await this.rtcPeerConnection.setRemoteDescription(
       new RTCSessionDescription(offer)
     );
     const answerDescription = await this.rtcPeerConnection.createAnswer();
     await this.rtcPeerConnection.setLocalDescription(answerDescription);
     const answer = this.getSessionDescription(answerDescription);
-    return updateDoc(callDoc, { answer });
+    return this.database.updateCallWithAnswer(callId, answer);
   }
 
   private getSessionDescription({
@@ -139,7 +118,7 @@ export class WebRTCService {
 
   private getCandidatesAndSaveToDb(
     subCollection: SubCollection,
-    callDoc: DocumentReference<DocumentData>
+    callId: string
   ): Observable<void> {
     return fromEvent<RTCPeerConnectionIceEvent>(
       this.rtcPeerConnection,
@@ -147,7 +126,11 @@ export class WebRTCService {
     ).pipe(
       switchMap(({ candidate }) =>
         candidate
-          ? addDoc(collection(callDoc, subCollection), candidate.toJSON())
+          ? this.database.addCandidate(
+              callId,
+              subCollection,
+              candidate.toJSON()
+            )
           : EMPTY
       ),
       map(() => {
@@ -158,18 +141,13 @@ export class WebRTCService {
 
   private addCandidateToPeerConnectionWhenAnswered(
     subCollection: SubCollection,
-    callDoc: DocumentReference<DocumentData>
+    callId: string
   ): Observable<void> {
-    return collectionChanges(collection(callDoc, subCollection)).pipe(
-      map((changes) =>
-        changes
-          .filter(({ type }) => type === 'added')
-          .forEach(({ doc }) =>
-            this.rtcPeerConnection.addIceCandidate(
-              new RTCIceCandidate(doc.data())
-            )
-          )
-      )
+    return this.database.candidateAdded(
+      subCollection,
+      callId
+    )((data: RTCIceCandidateInit) =>
+      this.rtcPeerConnection.addIceCandidate(new RTCIceCandidate(data))
     );
   }
 }
