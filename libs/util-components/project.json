@@ -1,0 +1,26 @@
+{
+  "projectType": "library",
+  "root": "libs/util-components",
+  "sourceRoot": "libs/util-components/src",
+  "prefix": "video-conference",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/util-components"],
+      "options": {
+        "jestConfig": "libs/util-components/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/util-components/src/**/*.ts",
+          "libs/util-components/src/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

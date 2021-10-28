@@ -4,6 +4,7 @@
     "client": "apps/client",
     "client-e2e": "apps/client-e2e",
     "ng-web-apis-extended": "libs/ng-web-apis-extended",
-    "services": "libs/services"
+    "services": "libs/services",
+    "util-components": "libs/util-components"
   }
 }

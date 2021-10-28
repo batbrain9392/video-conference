@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@util-components": ["libs/util-components/src/index.ts"],
       "@video-conference/ng-web-apis-extended": [
         "libs/ng-web-apis-extended/src/index.ts"
       ],

@@ -1,26 +1,32 @@
-<section class="videos">
-  <div>
-    <h3>Local Stream</h3>
-    <video
-      [muted]="true"
-      autoplay
-      playsinline
-      [srcObject]="localStream$ | async"
-    ></video>
-  </div>
-  <div>
-    <h3>Remote Stream</h3>
-    <video autoplay playsinline [srcObject]="remoteStream$ | async"></video>
-  </div>
-</section>
+<video-conference-github-corner
+  url="https://github.com/batbrain9392/video-conference"
+></video-conference-github-corner>
 
-<h2>1. Create a call</h2>
-<button (click)="createCall()">Create call</button>
+<main>
+  <section class="videos">
+    <div>
+      <h3>Local Stream</h3>
+      <video
+        [muted]="true"
+        autoplay
+        playsinline
+        [srcObject]="localStream$ | async"
+      ></video>
+    </div>
+    <div>
+      <h3>Remote Stream</h3>
+      <video autoplay playsinline [srcObject]="remoteStream$ | async"></video>
+    </div>
+  </section>
 
-<h2>2. Join a meeting</h2>
-<p>Answer the call from a different browser window or device</p>
-<input [(ngModel)]="callId" />
-<button (click)="joinCall()">Answer</button>
+  <h2>1. Create a call</h2>
+  <button (click)="createCall()">Create call</button>
 
-<!-- <h2>3. Hangup</h2>
-<button>Hangup</button> -->
+  <h2>2. Join a meeting</h2>
+  <p>Answer the call from a different browser window or device</p>
+  <input [(ngModel)]="callId" />
+  <button (click)="joinCall()">Answer</button>
+
+  <!-- <h2>3. Hangup</h2>
+  <button>Hangup</button> -->
+</main>

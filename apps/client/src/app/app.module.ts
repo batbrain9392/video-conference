@@ -8,6 +8,7 @@ import {
   getFirestore,
   connectFirestoreEmulator,
 } from '@angular/fire/firestore';
+import { UtilComponentsModule } from '@util-components';
 
 import { AppComponent } from './app.component';
 
@@ -24,6 +25,7 @@ import { AppComponent } from './app.component';
         connectFirestoreEmulator(firestore, 'localhost', 8080);
       return firestore;
     }),
+    UtilComponentsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
