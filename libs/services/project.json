@@ -2,7 +2,7 @@
   "projectType": "library",
   "root": "libs/services",
   "sourceRoot": "libs/services/src",
-  "prefix": "video-conference",
+  "prefix": "srv",
   "targets": {
     "test": {
       "executor": "@nrwl/jest:jest",

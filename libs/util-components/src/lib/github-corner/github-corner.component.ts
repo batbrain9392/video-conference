@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
 @Component({
-  selector: 'video-conference-github-corner',
+  selector: 'uc-github-corner',
   templateUrl: './github-corner.component.html',
   styleUrls: ['./github-corner.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -2,7 +2,7 @@
   "projectType": "library",
   "root": "libs/util-components",
   "sourceRoot": "libs/util-components/src",
-  "prefix": "video-conference",
+  "prefix": "uc",
   "targets": {
     "test": {
       "executor": "@nrwl/jest:jest",

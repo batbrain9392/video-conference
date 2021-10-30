@@ -2,7 +2,7 @@
   "projectType": "library",
   "root": "libs/ng-web-apis-extended",
   "sourceRoot": "libs/ng-web-apis-extended/src",
-  "prefix": "video-conference",
+  "prefix": "web-api",
   "targets": {
     "test": {
       "executor": "@nrwl/jest:jest",
