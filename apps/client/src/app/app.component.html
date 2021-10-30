@@ -20,12 +20,14 @@
   </section>
 
   <h2>1. Create a call</h2>
-  <button (click)="createCall()">Create call</button>
+  <button (click)="createCall()" [disabled]="isCreateCallDisabled">
+    Create call
+  </button>
 
   <h2>2. Join a meeting</h2>
   <p>Answer the call from a different browser window or device</p>
   <input [(ngModel)]="callId" />
-  <button (click)="joinCall()">Answer</button>
+  <button (click)="joinCall()" [disabled]="isAnswerDisabled">Answer</button>
 
   <!-- <h2>3. Hangup</h2>
   <button>Hangup</button> -->

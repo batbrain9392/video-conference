@@ -12,13 +12,16 @@ export class AppComponent {
   readonly localStream$ = this.media.localStream$;
   readonly remoteStream$ = this.webRTC.remoteStream$;
   callId = '';
+  isCreateCallDisabled = false;
+  isAnswerDisabled = false;
 
   constructor(
     private readonly media: MediaService,
     private readonly webRTC: WebRTCService
   ) {}
 
-  async createCall(): Promise<void> {
+  createCall(): void {
+    this.disableButtons();
     this.webRTC
       .createCall()
       .pipe(tap((callId) => (this.callId = callId)))
@@ -26,6 +29,12 @@ export class AppComponent {
   }
 
   joinCall(): void {
+    this.disableButtons();
     this.webRTC.joinCall(this.callId).subscribe();
+  }
+
+  private disableButtons(): void {
+    this.isCreateCallDisabled = true;
+    this.isAnswerDisabled = true;
   }
 }
