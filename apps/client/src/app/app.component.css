@@ -5,6 +5,13 @@
   position: relative;
 }
 
+uc-github-corner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 9999999;
+}
+
 main {
   padding: 40px 10px;
   font-family: 'Syne Mono', monospace;

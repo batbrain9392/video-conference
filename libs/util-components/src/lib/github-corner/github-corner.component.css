@@ -1,9 +1,5 @@
 :host {
-  position: absolute;
-  top: 0;
-  border: 0;
-  right: 0;
-  z-index: 9999999;
+  display: inline-block;
 }
 
 .github-corner .octo-arm {
