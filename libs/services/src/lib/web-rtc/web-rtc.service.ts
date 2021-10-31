@@ -66,11 +66,41 @@ export class WebRTCService {
     );
   }
 
+  private getCandidatesAndSaveToDb(
+    subCollection: SubCollection,
+    callId: string
+  ): Observable<void> {
+    return fromEvent<RTCPeerConnectionIceEvent>(
+      this.rtcPeerConnection,
+      'icecandidate'
+    ).pipe(
+      switchMap(({ candidate }) =>
+        candidate
+          ? this.database.addCandidate(
+              callId,
+              subCollection,
+              candidate.toJSON()
+            )
+          : EMPTY
+      ),
+      map(() => {
+        return;
+      })
+    );
+  }
+
   private async createOffer(callId: string): Promise<void> {
     const offerDescription = await this.rtcPeerConnection.createOffer();
     await this.rtcPeerConnection.setLocalDescription(offerDescription);
     const offer = this.getSessionDescription(offerDescription);
     return this.database.setCallWithOffer(callId, offer);
+  }
+
+  private getSessionDescription({
+    type,
+    sdp,
+  }: RTCSessionDescriptionInit): SessionDescription {
+    return { type, sdp };
   }
 
   private listenForRemoteAnswer(callId: string): Observable<void> {
@@ -107,36 +137,6 @@ export class WebRTCService {
     await this.rtcPeerConnection.setLocalDescription(answerDescription);
     const answer = this.getSessionDescription(answerDescription);
     return this.database.updateCallWithAnswer(callId, answer);
-  }
-
-  private getSessionDescription({
-    type,
-    sdp,
-  }: RTCSessionDescriptionInit): SessionDescription {
-    return { type, sdp };
-  }
-
-  private getCandidatesAndSaveToDb(
-    subCollection: SubCollection,
-    callId: string
-  ): Observable<void> {
-    return fromEvent<RTCPeerConnectionIceEvent>(
-      this.rtcPeerConnection,
-      'icecandidate'
-    ).pipe(
-      switchMap(({ candidate }) =>
-        candidate
-          ? this.database.addCandidate(
-              callId,
-              subCollection,
-              candidate.toJSON()
-            )
-          : EMPTY
-      ),
-      map(() => {
-        return;
-      })
-    );
   }
 
   private addCandidateToPeerConnectionWhenAnswered(
